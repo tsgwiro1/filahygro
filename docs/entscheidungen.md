@@ -15,6 +15,7 @@ zum Bauen und Flashen stehen in [installation.md](installation.md).
 - [Ladestand aus der Li-Ion-Kurve](#ladestand-aus-der-li-ion-kurve)
 - [Warum nicht ESPHome](#warum-nicht-esphome)
 - [Ausgangslage Stromverbrauch](#ausgangslage-stromverbrauch)
+- [Ruhestrom gemessen](#ruhestrom-gemessen)
 
 ---
 
@@ -68,10 +69,14 @@ diese Kopie und braucht kein Dateisystem.
 
 ## Sensor einmal erkennen
 
-Die gebauten Geräte tragen verschiedene Sensoren: SHT31-D, SHT40, HDC1080. Die
-Firmware sucht den Sensor beim ersten Start und nach dem Portal und merkt sich
+Die gebauten Geräte tragen verschiedene Sensoren: SHT31-D, SHT40, HDC1080,
+BME280. Die Firmware sucht den Sensor beim ersten Start und nach dem Portal und merkt sich
 das Ergebnis. Danach liest sie direkt den bekannten Sensor. Neu gesucht wird
 nur, wenn das Lesen fehlschlägt, etwa nach einem Sensortausch.
+
+SHT31 und SHT40 antworten beide auf Adresse 0x44; die Firmware unterscheidet
+sie an der Antwort auf einen Befehl. Billige BME280-Module tragen oft einen
+BMP280, der keine Feuchte misst. Die Firmware prüft deshalb die Chip-ID.
 
 ## Kalibrierung der Akkuspannung
 
@@ -108,8 +113,39 @@ Messung an der Firmware von 2021, ein Sendezyklus alle fünf Minuten:
 | wach | 0.9 s | 72 mA | 0.018 mAh |
 | Deep Sleep | 300 s | 0.4 mA | 0.033 mAh |
 
-Im Mittel rund 0.61 mA, mit einer 4000-mAh-Zelle etwa 270 Tage. Zwei Drittel
-davon verbraucht der Schlaf. 0.4 mA ist rund das Zwanzigfache dessen, was ein
-ESP8266 im Deep Sleep allein braucht; der Rest kommt von der übrigen
-Schaltung. Woher genau, klärt eine Messreihe an der Steckbrücke J2 (Isens),
-bevor an der Firmware gespart wird.
+Im Mittel rund 0.61 mA, mit einer 3000-mAh-Zelle (LG HG2) etwa 200 Tage.
+Zwei Drittel davon verbraucht der Schlaf. 0.4 mA ist rund das Zwanzigfache
+dessen, was ein ESP8266 im Deep Sleep allein braucht; der Rest kommt von der
+übrigen Schaltung. Woher, hat eine Messreihe an der Steckbrücke J2 (Isens)
+geklärt, siehe [Ruhestrom gemessen](#ruhestrom-gemessen).
+
+## Ruhestrom gemessen
+
+Gemessen mit der Messfirmware `sleeptest` an vier gebauten Geräten, Ablauf in
+[ruhestrom.md](ruhestrom.md):
+
+| Befund | Schlafstrom |
+|---|---|
+| ESP-12F, Regler und Lademodul ohne Sensor | 25–30 µA |
+| zwei Geräte unverändert, mit SHT31-D bzw. HDC1080 | 27–28 µA |
+| Gerät mit defektem TP4056 auf dem Lademodul | 360 µA |
+| Gerät mit SHT40-Platine mit eigenem Regler | 556 µA |
+
+Die Schaltung selbst ist sparsam. Die hohen Werte kamen von einzelnen
+Bauteilen, nicht von der Bauart:
+
+- **Lademodul.** Der TP4056 eines Moduls verlor über den BAT-Pin rund 330 µA;
+  erkennbar daran, dass der Strom beim Erwärmen des Chips stark stieg. Nach dem
+  Tausch des Moduls: 70 µA. Den Rest von rund 40 µA zieht die Hauptplatine
+  dieses Geräts; die Streuung zwischen ESP-12F-Modulen ist eine mögliche
+  Erklärung.
+- **Sensorplatine.** Eine SHT40-Breakout-Platine mit eigenem Regler zog rund
+  530 µA, obwohl ihre LED entfernt war. Ersetzt durch ein BME280-Modul: 31 µA.
+
+Folgerungen:
+
+- Jedes Gerät vor dem Einsatz einmal mit `sleeptest` messen. Ein defektes
+  Lademodul sieht man von aussen nicht.
+- Sensorplatinen mit eigenem Regler meiden oder vorher messen.
+- Mit rund 30 µA reicht eine 3000-mAh-Zelle für den Schlaf allein über zehn
+  Jahre. Die Laufzeit bestimmt jetzt die Wachphase; dort setzt die Firmware an.

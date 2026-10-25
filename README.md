@@ -1,14 +1,14 @@
 # FilaHygro 🧵💧
 
-![Version](https://img.shields.io/badge/version-v0.1.0-blue.svg)
+![Version](https://img.shields.io/badge/version-v0.2.0-blue.svg)
 ![License](https://img.shields.io/badge/license-MIT-green.svg)
 ![Platform](https://img.shields.io/badge/platform-ESP8266-lightgrey.svg)
 
 > Misst Feuchte und Temperatur in Filamentboxen und Räumen, läuft monatelang
 > auf einer Li-Ion-Zelle und meldet sich per MQTT selbst in Home Assistant an.
 
-> 🚧 **Im Neuaufbau.** Version 0.1.0 ist das Gerüst: Die Firmware baut, meldet
-> ihre Version und schläft. Messen und Senden folgen in den nächsten Versionen.
+> 🚧 **Im Neuaufbau.** Version 0.2.0 bringt die Messfirmware für den Ruhestrom
+> und deren Ergebnis. Messen und Senden folgen in den nächsten Versionen.
 
 ---
 
@@ -41,7 +41,7 @@ Alles ausserhalb von Messen und Senden läuft einmalig oder nur auf Anstoss.
 
 | | |
 |---|---|
-| 🌡️ **Sensor** | SHT31-D, SHT40 oder HDC1080, wird einmal erkannt |
+| 🌡️ **Sensor** | SHT31-D, SHT40, HDC1080 oder BME280, wird einmal erkannt |
 | 📡 **Anbindung** | MQTT mit Home-Assistant-Discovery, ohne Eintrag von Hand |
 | ⚙️ **Einrichtung** | WLAN, MQTT, Name und Kalibrierung im Einrichtungsportal am Gerät, keine Konfigurationsdateien |
 | 🔋 **Akku** | Spannung und Ladestand, Tiefentladeschutz in der Hardware |
@@ -97,6 +97,7 @@ Schema und Beschreibung der Platine liegen in **[hardware/](hardware/)**.
 |---|---|
 | [docs/installation.md](docs/installation.md) | Bauen, Adapter anschliessen, flashen |
 | [docs/entscheidungen.md](docs/entscheidungen.md) | Warum es so gebaut ist – Energie, Einrichtung, Sensoren, Ausgangslage |
+| [docs/ruhestrom.md](docs/ruhestrom.md) | Ruhestrom mit der Messfirmware messen |
 | [hardware/README.md](hardware/README.md) | Schema und Baugruppen |
 | [CHANGELOG.md](CHANGELOG.md) | Was sich je Version geändert hat, und warum |
 

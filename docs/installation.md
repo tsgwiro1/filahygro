@@ -37,12 +37,16 @@ Stiftleiste J1 auf der Platine (Rev 2):
 
 | J1 Pin | Signal am ESP | an den Adapter |
 |---|---|---|
-| 2 | RX | TX |
-| 3 | TX | RX |
+| 2 | TX | RX |
+| 3 | RX | TX |
 | 6 | GND | GND |
 
 Pin 1, 4 und 5 sind nicht belegt. Den 3.3-V- oder 5-V-Ausgang des Adapters
 **nicht** anschliessen.
+
+Ältere Platinen führen RX und TX an J1 vertauscht. Kommt im seriellen Monitor
+nichts an oder schlägt das Flashen fehl, die beiden Leitungen tauschen; bei
+3.3-V-Pegel schadet das nicht.
 
 ## 4. Flashen
 
@@ -72,7 +76,7 @@ pio device monitor
 mit 74880 Baud) erscheint:
 
 ```
-FilaHygro 0.1.0
+FilaHygro 0.2.0
 ```
 
 Danach schläft das Gerät und meldet sich nach fünf Minuten wieder.

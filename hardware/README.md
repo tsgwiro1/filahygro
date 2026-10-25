@@ -21,5 +21,9 @@ Schema der Platine, Revision 2, gezeichnet in EasyEDA.
 | J2 | Isens | Steckbrücke im Akkupfad, zum Messen des Stroms |
 | KEY1, KEY2 | Taster | RESET und BOOT (GPIO0) |
 
+Vor dem Einsatz den Ruhestrom messen, siehe
+[docs/ruhestrom.md](../docs/ruhestrom.md). Ein Lademodul mit defektem TP4056
+oder eine Sensorplatine mit eigenem Regler kann ihn verzehnfachen.
+
 Mit der Lötbrücke SB1 liegt ADR des Sensors an 3.3 V. Offen für den SHT31-D
 (Adresse 0x44), geschlossen für den HDC1080 (Adresse 0x40).
